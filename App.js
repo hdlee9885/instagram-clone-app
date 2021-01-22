@@ -10,7 +10,15 @@ import Landing from './components/auth/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './redux/reducers';
+import thunk from 'redux-thunk';
+import Main from './components/Main'
+
 const Stack = createStackNavigator();
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const firebaseConfig = {
   apiKey: "AIzaSyDai3DyJTI4vE_o1H0eaPWkdb_ol5fX-cM",
@@ -23,7 +31,7 @@ const firebaseConfig = {
 };
 
 if (firebase.apps.length === 0) {
-  firebase.initializeApp(firebaseConfig)
+  firebase.initializeApp(firebaseConfig);
 }
 
 export class App extends Component {
@@ -75,9 +83,9 @@ export class App extends Component {
     
     if (loggedIn) {
       return (
-        <View style={{ flex: 1, justifyContent: 'center'}}>
-          <Text>User is logged in</Text>
-        </View>
+        <Provider store={store}>
+          <Main />
+        </Provider>
       )
     }
   }
