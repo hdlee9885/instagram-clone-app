@@ -1,9 +1,17 @@
 import React, { Component } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TabBarIOS } from 'react-native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetchUser } from '../redux/actions/index'
+
+import FeedScreen from './main/Feed'
+
+const Tab = createMaterialBottomTabNavigator();
 
 export class Main extends Component {
 
@@ -12,19 +20,16 @@ export class Main extends Component {
     }
 
     render() {
-        const { currentUser } = this.props;
-        console.log(currentUser)
-
-        if (currentUser == undefined) {
-            return (
-                <View></View>
-            )
-        }
-
         return (
-            <View style={{ flex: 1, justifyContent: 'center'}}>
-                <Text>User is logged in</Text>
-            </View>
+            <Tab.Navigator>
+                <Tab.Screen name="Feed" component={FeedScreen} 
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons name="home" color={color} size={26} />
+                        )
+                    }}/>
+                {/* <Tab.Screen name="Settings" component={SettingsScreen} /> */}
+            </Tab.Navigator>
         )
     }
 }
