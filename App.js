@@ -15,6 +15,7 @@ import { createStore, applyMiddleware } from 'redux';
 import rootReducer from './redux/reducers';
 import thunk from 'redux-thunk';
 import Main from './components/Main'
+import AddScreen from './components/main/Add'
 
 const Stack = createStackNavigator();
 
@@ -87,6 +88,7 @@ export class App extends Component {
           <NavigationContainer>
             <Stack.Navigator initialRouteName="Main">
               <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
+              <Stack.Screen name="AddScreen" component={AddScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </Provider>
