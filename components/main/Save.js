@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { StyleSheet, TextInput, View, Button, Image } from 'react-native';
+import { View, TextInput, Image, Button } from 'react-native'
+
 import firebase from 'firebase'
-require('firebase/firestore')
-require('firebase/firebase-storage')
+require("firebase/firestore")
+require("firebase/firebase-storage")
 
 export default function Save(props) {
 
@@ -10,6 +11,8 @@ export default function Save(props) {
 
     const uploadImage = async () => {
         const uri = props.route.params.image;
+        const childPath = `post/${firebase.auth().currentUser.uid}/${Math.random().toString(36)}`;
+        console.log(childPath)
 
         const response = await fetch(uri);
         const blob = await response.blob();
@@ -17,7 +20,7 @@ export default function Save(props) {
         const task = firebase
                         .storage()
                         .ref()
-                        .child(`posts/${firebase.auth.currentUser.uid}/${Math.random().toString(36)}`)
+                        .child(childPath)
                         .put(blob);
 
         const taskProgress = snapshot => {
@@ -26,6 +29,7 @@ export default function Save(props) {
 
         const taskCompleted = () => {
             task.snapshot.ref.getDownloadURL().then((snapshot) => {
+                savePostData(snapshot);
                 console.log(snapshot)
             })
         }
@@ -37,18 +41,30 @@ export default function Save(props) {
         task.on("state_changed", taskProgress, taskError, taskCompleted);
     }
 
-    console.log(props.route.params.image)
+    const savePostData = (downloadURL) => {
+
+        firebase.firestore()
+            .collection('posts')
+            .doc(firebase.auth().currentUser.uid)
+            .collection("userPosts")
+            .add({
+                downloadURL,
+                caption,
+                likesCount: 0,
+                creation: firebase.firestore.FieldValue.serverTimestamp()
+            }).then((function () {
+                props.navigation.popToTop()
+            }))
+    }
     return (
-        <View style={{flex: 1}}>
-            <Image source={{uri:props.route.params.image}} />
-            <TextInput 
+        <View style={{ flex: 1 }}>
+            <Image source={{ uri: props.route.params.image }} />
+            <TextInput
                 placeholder="Write a Caption"
                 onChangeText={(caption) => setCaption(caption)}
             />
-            <Button 
-                title="Save"
-                onPress={() => uploadImage()}
-            />
+
+            <Button title="Save" onPress={() => uploadImage()} />
         </View>
     )
 }
