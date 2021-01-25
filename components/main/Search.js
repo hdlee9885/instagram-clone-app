@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, FlatList, TouchableOpacity, Touchable } from 'react-native'
+import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native'
+
 import firebase from 'firebase'
 require('firebase/firestore')
 
@@ -7,7 +8,7 @@ export default function Search(props) {
 
     const [users, setUsers] = useState([]);
 
-    const getAllUserResults = (search) => {
+    const getSearchUserResults = (search) => {
         firebase.firestore()
                 .collection('users')
                 .where('name', '>=', search)
@@ -16,7 +17,7 @@ export default function Search(props) {
                     let users = snapshot.docs.map(doc => {
                         const data = doc.data();
                         const id = doc.id;
-                        return { id, ...data };
+                        return { id, ...data }
                     });
                     setUsers(users);
                 });
@@ -24,20 +25,20 @@ export default function Search(props) {
 
     return (
         <View>
-            <TextInput 
-                onChangeText={(search) => getAllUserResults(search)} 
-                placeholder="Search"    
+            <TextInput
+                placeholder="Search"
+                onChangeText={(search) => getSearchUserResults(search)}
             />
-            <FlatList 
+
+            <FlatList
                 numColumns={1}
                 horizontal={false}
                 data={users}
-                renderItem={({item}) => (
+                renderItem={({ item }) => (
                     <TouchableOpacity
                         onPress={() => props.navigation.navigate("Profile", {uid: item.id})}>
                         <Text>{item.name}</Text>
                     </TouchableOpacity>
-                    
                 )}
             />
         </View>
