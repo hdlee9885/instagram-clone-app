@@ -11,9 +11,10 @@ import { fetchUser, fetchUserPosts } from '../redux/actions/index'
 import FeedScreen from './main/Feed'
 import AddScreen from './main/Add'
 import ProfileScreen from './main/Profile'
+import SearchScreen from './main/Search'
 
-const Empty = () => {
-    return(null);
+const EmptyScreen = () => {
+    return (null);
 }
 
 const Tab = createMaterialBottomTabNavigator();
@@ -35,7 +36,14 @@ export class Main extends Component {
                         )
                     }}/>
 
-                <Tab.Screen name="Add" component={Empty} 
+                <Tab.Screen name="Search" component={SearchScreen} navigation={this.props.navigation}
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons name="magnify" color={color} size={26} />
+                        )
+                    }}/>
+
+                <Tab.Screen name="Add" component={EmptyScreen} 
                     listeners={({ navigation }) => ({
                         tabPress: e => {
                             e.preventDefault();
