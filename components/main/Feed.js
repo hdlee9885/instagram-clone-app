@@ -8,9 +8,6 @@ import { connect } from 'react-redux'
 
 function Feed(props) {
     const [posts, setPosts] = useState([]);
-    const [userPosts, setUserPosts] = useState([]);
-    const [user, setUser] = useState(null);
-    const [following, setFollowing] = useState(false);
 
     useEffect(() => {
         let posts = [];
