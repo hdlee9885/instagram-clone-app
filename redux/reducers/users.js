@@ -28,7 +28,11 @@ export const users = (state = initialState, action) => {
         //             post)
             };
         case CLEAR_DATA:
-        //     return initialState;
+            return {
+                currentUser: null,
+                posts: [],
+                following: [],
+            };
         default:
             return state;
     }
